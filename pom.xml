@@ -7,6 +7,21 @@
     <groupId>groupId</groupId>
     <artifactId>WebSocketPalette</artifactId>
     <version>1.0-SNAPSHOT</version>
-
-    
+    <dependencies>
+        <dependency>
+            <groupId>BeepBeep3</groupId>
+            <artifactId>BeepBeep3</artifactId>
+            <version>3.0.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/libs/beepbeep-3.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>BullWinkle</groupId>
+            <artifactId>BullWinkle</artifactId>
+            <version>1.0.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/libs/bullwinkle.jar</systemPath>
+        </dependency>
+    </dependencies>
 </project>
+
