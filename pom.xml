@@ -27,7 +27,7 @@
             <artifactId>BeepBeepExplore</artifactId>
             <version>0.1.0</version>
             <scope>system</scope>
-            <systemPath>${basedir}/libs/BeepBeepExplore-0.1.0.jar</systemPath>
+            <systemPath>${basedir}/libs/BeepBeepExplore.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.java-websocket</groupId>
