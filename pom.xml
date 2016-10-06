@@ -6,7 +6,7 @@
 
     <groupId>groupId</groupId>
     <artifactId>WebSocketPalette</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1</version>
     <dependencies>
         <dependency>
             <groupId>BeepBeep3</groupId>
@@ -21,6 +21,18 @@
             <version>1.0.0</version>
             <scope>system</scope>
             <systemPath>${basedir}/libs/bullwinkle.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>BeepBeepExplore</groupId>
+            <artifactId>BeepBeepExplore</artifactId>
+            <version>0.1.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/libs/BeepBeepExplore-0.1.0.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.java-websocket</groupId>
+            <artifactId>Java-WebSocket</artifactId>
+            <version>1.3.0</version>
         </dependency>
     </dependencies>
 </project>
