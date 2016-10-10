@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="WebSocketPalette" basedir="." default="dist">
+
+    <xmlproperty file="config.xml"/>
+
+    <property name="scriptversion" value="0.2"/>
+	<property name="skip.tests" value="true"/>
+
+    <path id="build.dir.depjars">
+        <fileset dir="${build.dir.dep}" includes="**/*.jar"/>
+    </path>
+
+    <target name="init" description="Initialize all the build">
+        <mkdir dir="${build.dir.bin}"/>
+        <mkdir dir="${build.dir.release}"/>
+    </target>
+
+    <target name="release" depends="init, jar" description="Compile and zip the release">
+        <delete file="${build.dir.release}/${build.name}-${build.version}.zip"/>
+		<delete file="${build.name}.jar"/>
+		<copy todir="${build.dir.release}" includeemptydirs="false">
+            <fileset dir="${build.dir.bin}" include="**/*.jar"/>
+        </copy>
+        <zip basedir="." destfile="${build.dir.release}/${build.jar.basename}-${build.version}.zip" includes="${build.dir.bin}/${build.name},Readme.MD"/>
+		<delete file="${build.dir.release}/${build.name}.jar"/>
+    </target>
+
+    <target name="zip" depends="jar" description="Zips the compiled jar">
+        <delete file="${build.name}-${build.version}.zip"/>
+		<delete file="${build.name}.jar"/>
+		<copy todir="${basedir}" includeemptydirs="false">
+            <fileset dir="${build.dir.bin}" include="**/*.jar"/>
+        </copy>
+        <zip basedir="." destfile="${build.name}-${build.version}.zip" includes="${build.name}.jar,Readme.md"/>
+		<delete file="${build.name}.jar"/>
+    </target>
+
+    <target name="dist" depends="jar" description="Same as jar">
+        <!-- Do nothing -->
+    </target>
+
+    <target name="compile" depends="init" description="Compile the sources">
+        <mkdir dir="${build.dir.bin}"/>
+        <javac
+                target="${build.jdk}" source="${build.jdk}"
+                srcdir="${build.dir.src}"
+                destdir="${build.dir.bin}"
+                includeantruntime="false"
+                classpathref="build.dir.depjars">
+        </javac>
+        <copy todir="${build.dir.bin}" includeemptydirs="false">
+            <fileset dir="${build.dir.src}" excludes="**/*.java"/>
+        </copy>
+    </target>
+
+    <target name="jar" depends="compile" description="Create the runnable JAR">
+        <tstamp>
+            <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
+        </tstamp>
+        <jar destfile="${build.dir.bin}/${build.name}.jar" filesetmanifest="skip">
+            <manifest>
+                <attribute name="Main-Class" value="${build.mainclass}"/>
+                <attribute name="Class-Path" value="."/>
+                <attribute name="Built-By" value="${user.name}"/>
+                <attribute name="Built-Date" value="${TODAY}"/>
+                <attribute name="Implementation-Version" value="${build.version}"/>
+            </manifest>
+            <fileset dir="${build.dir.bin}"/>
+            <zipgroupfileset dir="${build.dir.dep}">
+                <include name="**/*.jar" if="${build.jar.withdeps}"/>
+            </zipgroupfileset>
+            <fileset dir="${build.dir.src}">
+                <include name="*" if="${build.jar.withsrc}"/>
+            </fileset>
+        </jar>
+    </target>
+
+    <target name="clean" description="Clean the project">
+        <delete>
+            <fileset dir="${basedir}" includes="**/*.xml~"/>
+        </delete>
+        <delete>
+            <fileset dir="${build.dir.bin}" includes="**/*.*"/>
+        </delete>
+    </target>
+
+    <target name="show-properties" description="Print all properties">
+        <echoproperties/>
+    </target>
+
+    <target name="version" description="Show build script version">
+        <echo message="This is version ${scriptversion} of the script" level="info"/>
+    </target>
+</project>
