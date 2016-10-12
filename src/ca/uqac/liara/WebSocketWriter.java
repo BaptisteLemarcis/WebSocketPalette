@@ -12,6 +12,7 @@ import org.java_websocket.handshake.ServerHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
@@ -24,12 +25,13 @@ import java.util.Queue;
 public class WebSocketWriter extends SingleProcessor implements Runnable{
     private Server server;
     private int port;
+    private boolean serverRunning = false;
 
-    public WebSocketWriter(int in_arity, int port) {
-        super(in_arity,0);
+    public WebSocketWriter(int port) {
+        super(1,0);
         this.port = port;
         try {
-            this.server = new Server(port);;
+            this.server = new Server(port);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -39,24 +41,24 @@ public class WebSocketWriter extends SingleProcessor implements Runnable{
     @Override
     protected Queue<Object[]> compute(Object[] inputs)
     {
-        this.server.sendToAll(JSonParser.encode(inputs));
+        this.server.sendToAll((String)inputs[0]);
         return null;
     }
 
     public void start(){
         this.server.start();
-        new Thread(this).start();
+        this.serverRunning = true;
     }
 
     @Override
     public Processor clone()
     {
-        return new WebSocketWriter(this.m_outputArity, this.port);
+        return new WebSocketWriter(this.port);
     }
 
     @Override
     public void run() {
-        while(true){
+        while(this.serverRunning){
             boolean toContinue = false;
             for (int i = 0; i < m_inputArity; i++)
             {
@@ -86,7 +88,15 @@ public class WebSocketWriter extends SingleProcessor implements Runnable{
 
             // Compute output event
             this.compute(inputs);
-            toContinue = false;
+        }
+    }
+
+    public void stop() {
+        try {
+            this.server.stop();
+            this.serverRunning = false;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

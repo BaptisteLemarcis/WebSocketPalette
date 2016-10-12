@@ -19,26 +19,23 @@ public class Client extends WebSocketClient {
     @Override
     public void onClose(int arg0, String arg1, boolean arg2)
     {
-        // Do nothing
+        this.reader.connectionClosed();
     }
 
     @Override
     public void onError(Exception arg0)
     {
-        // Do nothing
+        this.reader.connectionClosed();
     }
 
     @Override
     public synchronized void onMessage(String arg0)
     {
-        //System.out.println("toto");
         this.reader.pushMsg(arg0);
-        //System.out.println(m_messageQueue.size());
     }
 
     @Override
     public void onOpen(ServerHandshake arg0)
     {
-        System.out.println("titi");
     }
 }

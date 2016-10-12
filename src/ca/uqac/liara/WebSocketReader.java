@@ -21,27 +21,26 @@ import java.util.Queue;
  *
  * @author Sylvain Hallé
  */
-public class WebSocketReader extends Source
-{
+public class WebSocketReader extends Source {
     /**
      * The URI of the web socket server
      */
     private URI m_serverUri;
     private Queue<String> m_messageQueue;
     private Client client;
+    private boolean closedConnection = false;
 
-    WebSocketReader()
-    {
+    WebSocketReader() {
         super(1);
         this.m_messageQueue = new ArrayDeque<String>();
     }
 
     /**
      * Creates a new web socket reader
+     *
      * @param server_uri The URI of the server this reader should connect to
      */
-    public WebSocketReader(URI server_uri)
-    {
+    public WebSocketReader(URI server_uri) {
         this();
         m_serverUri = server_uri;
         client = new Client(m_serverUri, this);
@@ -53,23 +52,33 @@ public class WebSocketReader extends Source
     }
 
     @Override
-    protected Queue<Object[]> compute(Object[] inputs)
-    {
-        while(m_messageQueue.isEmpty()) try {
-            Thread.sleep(1);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    protected Queue<Object[]> compute(Object[] inputs) {
+        if (closedConnection) return null;
+        while (m_messageQueue.isEmpty()) {
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         return wrapObject(m_messageQueue.remove());
     }
 
     @Override
-    public Processor clone()
-    {
+    public Processor clone() {
         return new WebSocketReader(m_serverUri);
     }
 
     public void pushMsg(String arg0) {
         this.m_messageQueue.add(arg0);
+        getPushableOutput(0).push(arg0);
+    }
+
+    public void connectionClosed() {
+        this.closedConnection = true;
+    }
+
+    public void stop() {
+        this.client.close();
     }
 }

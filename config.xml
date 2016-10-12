@@ -3,7 +3,7 @@
 <build>
 
     <!-- The project's name -->
-    <name>BeepBeepExplore</name>
+    <name>WebSocket</name>
 	
     <!-- The project's version number -->
     <version>0.1-alpha</version>
@@ -13,18 +13,23 @@
 	
 	<dir>
 		<dep>dep</dep>
+        <lib>lib</lib>
 		<src>src</src>
 		<bin>bin</bin>
 		<release>release</release>
-		<src-test>test/src</src-test>
-		<bin-test>test/bin</bin-test>
+        <test>
+            <src>tests/src</src>
+            <bin>tests/bin</bin>
+            <report>tests/report</report>
+        </test>
+
 	</dir>
 	
     <!-- The project's author. -->
     <author>Baptiste Lemarcis</author>
 
     <!-- The project's main class -->
-    <mainclass>ca.uqac.liara.Main</mainclass>
+    <mainclass>ca.uqac.liara.PluginInitializer</mainclass>
 
     <!-- Installation folders -->
     <srcdir>src</srcdir>

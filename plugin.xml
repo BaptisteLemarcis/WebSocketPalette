@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <name>WebSocket</name>
+    <jarname>WebSocket.jar</jarname>
+    <version>0.1-alpha</version>
+    <authors>Baptiste Lemarcis</authors>
+    <mainclass>ca.uqac.liara.PluginInitializer</mainclass>
+</configuration>
