@@ -18,12 +18,12 @@ public class Server extends WebSocketServer {
 
     @Override
     public void onOpen(WebSocket webSocket, ClientHandshake clientHandshake) {
-        System.out.println("open");
+        System.out.println("Server open");
     }
 
     @Override
     public void onClose(WebSocket webSocket, int i, String s, boolean b) {
-        System.out.println("close");
+        System.out.println("Server closed");
     }
 
     @Override
@@ -31,14 +31,17 @@ public class Server extends WebSocketServer {
 
     @Override
     public void onError(WebSocket webSocket, Exception e) {
-        System.out.println("error");
+        System.err.println("Server error");
+        e.printStackTrace();
     }
 
     public void sendToAll( String text ) {
         Collection<WebSocket> con = connections();
-        synchronized ( con ) {
-            for( WebSocket c : con ) {
-                c.send( text );
+        if(!con.isEmpty()) {
+            synchronized ( con ) {
+                for( WebSocket c : con ) {
+                    c.send( text );
+                }
             }
         }
     }

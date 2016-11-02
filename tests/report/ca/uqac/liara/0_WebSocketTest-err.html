@@ -4,7 +4,14 @@
 <title>Standard Error from WebSocketTest</title>
 </head>
 <body>
-<pre>Exception in thread "Thread-9" org.java_websocket.exceptions.WebsocketNotConnectedException
+<pre>Exception in thread "Thread-9" Server error
+java.nio.channels.ClosedByInterruptException
+	at java.nio.channels.spi.AbstractInterruptibleChannel.end(AbstractInterruptibleChannel.java:202)
+	at sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:478)
+	at org.java_websocket.SocketChannelIOHelper.batch(SocketChannelIOHelper.java:52)
+	at org.java_websocket.server.WebSocketServer.run(WebSocketServer.java:349)
+	at java.lang.Thread.run(Thread.java:745)
+org.java_websocket.exceptions.WebsocketNotConnectedException
 	at org.java_websocket.WebSocketImpl.send(WebSocketImpl.java:566)
 	at org.java_websocket.WebSocketImpl.send(WebSocketImpl.java:543)
 	at ca.uqac.liara.Server.sendToAll(Unknown Source)

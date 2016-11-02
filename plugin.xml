@@ -2,7 +2,7 @@
 <configuration>
     <name>WebSocket</name>
     <jarname>WebSocket.jar</jarname>
-    <version>0.1-alpha</version>
+    <version>0.2-alpha</version>
     <authors>Baptiste Lemarcis</authors>
     <mainclass>ca.uqac.liara.PluginInitializer</mainclass>
 </configuration>

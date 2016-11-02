@@ -30,7 +30,7 @@ public class WebSocketReader extends Source {
     private Client client;
     private boolean closedConnection = false;
 
-    WebSocketReader() {
+    private WebSocketReader() {
         super(1);
         this.m_messageQueue = new ArrayDeque<String>();
     }
@@ -71,7 +71,9 @@ public class WebSocketReader extends Source {
 
     public void pushMsg(String arg0) {
         this.m_messageQueue.add(arg0);
-        getPushableOutput(0).push(arg0);
+        Pushable p = this.m_outputPushables[0];
+        if(p!=null)
+            p.push(arg0);
     }
 
     public void connectionClosed() {

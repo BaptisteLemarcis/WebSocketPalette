@@ -93,8 +93,8 @@ public class WebSocketWriter extends SingleProcessor implements Runnable{
 
     public void stop() {
         try {
-            this.server.stop();
             this.serverRunning = false;
+            this.server.stop();
         } catch (Exception e) {
             e.printStackTrace();
         }

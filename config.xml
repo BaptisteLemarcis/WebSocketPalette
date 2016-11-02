@@ -6,7 +6,7 @@
     <name>WebSocket</name>
 	
     <!-- The project's version number -->
-    <version>0.1-alpha</version>
+    <version>0.2-alpha</version>
 	
 	<!-- The project's jdk version -->
 	<jdk>1.8</jdk>

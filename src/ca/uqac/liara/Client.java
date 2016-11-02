@@ -19,12 +19,15 @@ public class Client extends WebSocketClient {
     @Override
     public void onClose(int arg0, String arg1, boolean arg2)
     {
+        System.out.println("Client closed");
         this.reader.connectionClosed();
     }
 
     @Override
     public void onError(Exception arg0)
     {
+        System.out.println("Client error");
+        arg0.printStackTrace();
         this.reader.connectionClosed();
     }
 
@@ -37,5 +40,6 @@ public class Client extends WebSocketClient {
     @Override
     public void onOpen(ServerHandshake arg0)
     {
+        System.out.println("Client open");
     }
 }
