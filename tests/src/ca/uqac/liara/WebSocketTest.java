@@ -2,8 +2,8 @@ package ca.uqac.liara;
 
 import ca.uqac.lif.cep.BeepBeepUnitTest;
 import ca.uqac.lif.cep.Connector;
-import ca.uqac.lif.cep.epl.QueueSink;
-import ca.uqac.lif.cep.epl.QueueSource;
+import ca.uqac.lif.cep.tmf.QueueSink;
+import ca.uqac.lif.cep.tmf.QueueSource;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class WebSocketTest extends BeepBeepUnitTest {
 
     @Test
     public void testRead1() throws URISyntaxException, InterruptedException, IOException, Connector.ConnectorException {
-        QueueSource ones = new QueueSource("1", 1);
+        QueueSource ones = new QueueSource(1);
         Vector<Object> obj = new Vector<Object>();
         for(int i = 0; i < 20; i++) obj.add("1");
         ones.setEvents(obj);

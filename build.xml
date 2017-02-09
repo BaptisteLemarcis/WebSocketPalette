@@ -57,6 +57,9 @@
             <classpath>
                 <path refid="build.ivydep" ></path>
                 <path refid="build.dir.depjars" ></path>
+                <fileset dir="./">
+                    <include name="beepbeep-3.jar"/>
+                </fileset>
             </classpath>
         </javac>
         <copy todir="${build.dir.bin}" includeemptydirs="false">
@@ -97,7 +100,7 @@
             </manifest>
             <fileset dir="${build.dir.bin}"/>
             <zipgroupfileset dir="${build.dir.dep}">
-                <include name="*.jar" if="${build.jar.withdeps}"/>
+                <include name="*" if="${build.jar.withdeps}"/>
             </zipgroupfileset>
             <fileset dir="${build.dir.src}">
                 <include name="*" if="${build.jar.withsrc}"/>

@@ -4,23 +4,27 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
+import java.util.ArrayDeque;
+import java.util.Queue;
 
 /**
  * Created by Baptiste on 10/11/2016.
  */
 public class Client extends WebSocketClient {
-    private WebSocketReader reader;
-    public Client(URI serverURI, WebSocketReader w)
+    //private WebSocketReader reader;
+    private Queue<String> m_messageQueue;
+    public Client(URI serverURI)
     {
         super(serverURI);
-        this.reader = w;
+        m_messageQueue = new ArrayDeque<String>();
+        //this.reader = w;
     }
 
     @Override
     public void onClose(int arg0, String arg1, boolean arg2)
     {
         System.out.println("Client closed");
-        this.reader.connectionClosed();
+        //this.reader.connectionClosed();
     }
 
     @Override
@@ -28,13 +32,17 @@ public class Client extends WebSocketClient {
     {
         System.out.println("Client error");
         arg0.printStackTrace();
-        this.reader.connectionClosed();
+        //this.reader.connectionClosed();
+    }
+
+    public String getMessage(){
+        return m_messageQueue.remove();
     }
 
     @Override
     public synchronized void onMessage(String arg0)
     {
-        this.reader.pushMsg(arg0);
+        this.m_messageQueue.add(arg0);
     }
 
     @Override
