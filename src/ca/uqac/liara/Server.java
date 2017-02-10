@@ -47,8 +47,11 @@ public class Server extends WebSocketServer {
     }
 
     public void sendToAll( String text ) {
+
+        this.connections();
+
         Collection<WebSocket> con = connections();
-        if(!con.isEmpty()) {
+        if(con!=null && !con.isEmpty()) {
             synchronized ( con ) {
                 for( WebSocket c : con ) {
                     c.send( text );

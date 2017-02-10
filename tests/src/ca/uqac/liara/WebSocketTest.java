@@ -26,12 +26,19 @@ public class WebSocketTest extends BeepBeepUnitTest {
         Vector<Object> obj = new Vector<Object>();
         for(int i = 0; i < 20; i++) obj.add("1");
         ones.setEvents(obj);
-        WebSocketWriter wsw = new WebSocketWriter(port);
+        Server s = new Server(port);
+        Thread serverThread;
+        s.start();
+
+        Client c = new Client(new URI("ws://localhost:" + port));
+        c.connectBlocking();
+        WSWriterProcessor wsw = new WSWriterProcessor(s);
+        serverThread = new Thread(wsw);
         Connector.connect(ones, wsw, 0, 0);
-        wsw.start();
-        new Thread(wsw).start();
+        serverThread.start();
         Thread.sleep(120);
-        WebSocketReader wsr = new WebSocketReader(new URI("ws://localhost:" + port));
+
+        WSReaderProcessor wsr = new WSReaderProcessor(c);
         QueueSink sink = new QueueSink(1);
         Connector.connect(wsr, sink);
         sink.pull();
@@ -39,8 +46,11 @@ public class WebSocketTest extends BeepBeepUnitTest {
         if (recv == null || !recv.equals("1")) {
             fail("Expected 1 on pull, got " + recv);
         }
-        wsr.stop();
-        wsw.stop();
+
+        c.close();
+        wsw.shutdown();
+        Thread.sleep(120);
+        s.stop();
         assertTrue(true);
     }
 }

@@ -12,6 +12,7 @@ import java.util.Queue;
 public class WSWriterProcessor extends SingleProcessor implements Runnable{
     private Server m_server = null;
     private Client m_client = null;
+    private boolean m_done = false;
 
     public WSWriterProcessor(Server s){
         super(1, 0);
@@ -34,12 +35,9 @@ public class WSWriterProcessor extends SingleProcessor implements Runnable{
 
     @Override
     public void run() {
-        while(true){
+        while(!m_done){
             boolean toContinue = false;
-            System.out.println("Arity " + m_inputArity);
             Pullable p = m_inputPullables[0];
-            System.out.println("length " + m_inputPullables.length);
-            System.out.println(" --> " + p);
             if(!p.hasNext()) toContinue = true;
             if(toContinue) continue;
 
@@ -59,5 +57,9 @@ public class WSWriterProcessor extends SingleProcessor implements Runnable{
             return new WSWriterProcessor(this.m_client);
         }
         return new WSWriterProcessor(this.m_server);
+    }
+
+    public void shutdown() {
+        m_done = true;
     }
 }
