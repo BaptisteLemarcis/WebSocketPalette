@@ -9,57 +9,68 @@ import java.util.Queue;
 /**
  * Created by baptiste on 2/9/2017.
  */
-public class WSWriterProcessor extends SingleProcessor implements Runnable{
+public class WSWriterProcessor extends SingleProcessor {
     private Server m_server = null;
     private Client m_client = null;
-    private boolean m_done = false;
 
-    public WSWriterProcessor(Server s){
+    public WSWriterProcessor(Server s) {
         super(1, 0);
         this.m_server = s;
     }
 
-    public WSWriterProcessor(Client c){
+    public WSWriterProcessor(Client c) {
         super(1, 0);
         this.m_client = c;
     }
 
     @Override
     protected Queue<Object[]> compute(Object[] inputs) {
-        if(this.m_client != null && this.m_client.getConnection().isOpen()){
-            this.m_client.send((String)inputs[0]);
+        if (this.m_client != null) {
+            for (; ; ) {
+                if (this.m_client.getConnection().isOpen()) break;
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            this.m_client.send("" + inputs[0]);
+            return null;
         }
-        this.m_server.sendToAll((String)inputs[0]);
+        for (; ; ) {
+            if (this.m_server.hasClient()) break;
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        this.m_server.sendToAll("" + inputs[0]);
         return null;
     }
 
-    @Override
-    public void run() {
-        while(!m_done){
-            boolean toContinue = false;
-            Pullable p = m_inputPullables[0];
-            if(!p.hasNext()) toContinue = true;
-            if(toContinue) continue;
+    public void send() throws InterruptedException {
+        Pullable p;
 
-            Object[] inputs = new Object[m_inputArity];
-            {
-                inputs[0] = p.pull();
-            }
-
-            // Compute output event
-            this.compute(inputs);
+        for (; ; ) {
+            p = getPullableInput(0);
+            if (p != null && p.hasNext()) break;
+            Thread.sleep(1);
         }
+        Object[] inputs = new Object[m_inputArity];
+        {
+            inputs[0] = p.pull();
+        }
+
+        // Compute output event
+        this.compute(inputs);
     }
 
     @Override
     public Processor clone() {
-        if(this.m_client != null){
+        if (this.m_client != null) {
             return new WSWriterProcessor(this.m_client);
         }
         return new WSWriterProcessor(this.m_server);
-    }
-
-    public void shutdown() {
-        m_done = true;
     }
 }

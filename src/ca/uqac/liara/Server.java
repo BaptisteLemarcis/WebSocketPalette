@@ -42,21 +42,26 @@ public class Server extends WebSocketServer {
 
     @Override
     public void onError(WebSocket webSocket, Exception e) {
-        System.err.println("Server error");
-        e.printStackTrace();
+        /*System.err.println("Server error");
+        e.printStackTrace();*/
     }
 
     public void sendToAll( String text ) {
-
-        this.connections();
-
         Collection<WebSocket> con = connections();
-        if(con!=null && !con.isEmpty()) {
-            synchronized ( con ) {
-                for( WebSocket c : con ) {
-                    c.send( text );
-                }
+        //while(con==null && con.isEmpty());
+        synchronized ( con ) {
+            for (WebSocket c : con) {
+                c.send(text);
             }
         }
+    }
+
+    public boolean hasMessage() {
+        return !this.m_messageQueue.isEmpty();
+    }
+
+    public boolean hasClient() {
+        Collection<WebSocket> con = connections();
+        return con != null && !con.isEmpty();
     }
 }

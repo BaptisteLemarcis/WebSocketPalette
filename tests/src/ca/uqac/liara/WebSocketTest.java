@@ -27,15 +27,12 @@ public class WebSocketTest extends BeepBeepUnitTest {
         for(int i = 0; i < 20; i++) obj.add("1");
         ones.setEvents(obj);
         Server s = new Server(port);
-        Thread serverThread;
         s.start();
-
         Client c = new Client(new URI("ws://localhost:" + port));
         c.connectBlocking();
         WSWriterProcessor wsw = new WSWriterProcessor(s);
-        serverThread = new Thread(wsw);
         Connector.connect(ones, wsw, 0, 0);
-        serverThread.start();
+        wsw.send();
         Thread.sleep(120);
 
         WSReaderProcessor wsr = new WSReaderProcessor(c);
@@ -48,7 +45,6 @@ public class WebSocketTest extends BeepBeepUnitTest {
         }
 
         c.close();
-        wsw.shutdown();
         Thread.sleep(120);
         s.stop();
         assertTrue(true);

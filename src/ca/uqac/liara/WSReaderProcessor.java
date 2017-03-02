@@ -25,7 +25,24 @@ public class WSReaderProcessor extends Source {
     @Override
     protected Queue<Object[]> compute(Object[] inputs) {
         if(this.m_client != null && this.m_client.getConnection().isOpen()){
+            for(;;){
+                if(this.m_client.hasMessage()) break;
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
             return wrapObject(this.m_client.getMessage());
+        }
+
+        for(;;) {
+            if (this.m_server.hasMessage()) break;
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         return wrapObject(this.m_server.getMessage());
     }
